@@ -1,30 +1,58 @@
-const db = require("../util/database");
+const Sequelize = require("sequelize"); //give me class/constructor function
 
-module.exports = class Product {
-  constructor(id, title, imageUrl, description, price) {
-    this.id = id;
-    this.title = title;
-    this.imageUrl = imageUrl;
-    this.description = description;
-    this.price = price;
-  }
+const sequelize = require("../util/database");
 
-  save() {
-    return db.execute(
-      "insert into products (title,price,description,imageUrl) values (?, ?, ?, ?)",
-      [this.title, this.price, this.description, this.imageUrl]
-    );
-  }
+const Product = sequelize.define("product", {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true,
+  },
+  title: Sequelize.STRING,
+  price: {
+    type: Sequelize.DOUBLE,
+    allowNull: false,
+  },
+  imageUrl: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  description: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+});
 
-  static fetchAll() {
-    return db.execute("select * from products");
-  }
+module.exports = Product;
 
-  static findById(id) {
-    return db.execute("select * from products where id = ?", [id]);
-  }
+// const db = require("../util/database");
 
-  static deleteProductById(id) {
-    return db.execute("delete from products where id = ?", [id]);
-  }
-};
+// module.exports = class Product {
+//   constructor(id, title, imageUrl, description, price) {
+//     this.id = id;
+//     this.title = title;
+//     this.imageUrl = imageUrl;
+//     this.description = description;
+//     this.price = price;
+//   }
+
+//   save() {
+//     return db.execute(
+//       "insert into products (title,price,description,imageUrl) values (?, ?, ?, ?)",
+//       [this.title, this.price, this.description, this.imageUrl]
+//     );
+//   }
+
+//   static fetchAll() {
+//     return db.execute("select * from products");
+//   }
+
+//   static findById(id) {
+//     return db.execute("select * from products where id = ?", [id]);
+//   }
+
+//   static deleteProductById(id) {
+//     return db.execute("delete from products where id = ?", [id]);
+//   }
+// };
