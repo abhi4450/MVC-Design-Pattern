@@ -5,9 +5,7 @@ const bodyParser = require("body-parser");
 
 const errorController = require("./controllers/error");
 
-const sequelize = require("./util/database");
-const Product = require("./models/product");
-const User = require("./models/user");
+const mongoConnect = require("./util/database").mongoConnect;
 
 const app = express();
 
@@ -15,58 +13,26 @@ app.set("view engine", "ejs");
 app.set("views", "views");
 
 const adminRoutes = require("./routes/admin");
-const shopRoutes = require("./routes/shop");
-const Cart = require("./models/cart");
-const CartItem = require("./models/cart-item");
+// const shopRoutes = require("./routes/shop");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use((req, res, next) => {
-  User.findByPk(1)
-    .then((user) => {
-      req.user = user;
-      next();
-    })
-    .catch((err) => console.log(err));
+  //   // User.findByPk(1)
+  //   //   .then((user) => {
+  //   //     req.user = user;
+  //   //     next();
+  //   //   })
+  //   //   .catch((err) => console.log(err));
+  next();
 });
 
 app.use("/admin", adminRoutes);
-app.use(shopRoutes);
+// app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-Product.belongsTo(User, {
-  constraints: true,
-  onDelete: "CASCADE",
+mongoConnect(() => {
+  app.listen(3000);
 });
-User.hasMany(Product);
-User.hasOne(Cart);
-
-Cart.belongsTo(User);
-
-Cart.belongsToMany(Product, { through: CartItem });
-Product.belongsToMany(Cart, { through: CartItem });
-
-sequelize
-  .sync() //it syncs your model with database by creating an appropriate tables and also define the relations among them
-  .then((result) => {
-    return User.findByPk(1);
-  })
-  .then((user) => {
-    if (!user) {
-      return User.create({ name: "Max", email: "test@test.com" });
-    }
-
-    return user;
-  })
-  .then((user) => {
-    return user.createCart();
-    // console.log(user);
-  })
-  .then((cart) => {
-    app.listen(3000);
-  })
-  .catch((err) => {
-    console.log(err);
-  });
