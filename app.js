@@ -7,6 +7,8 @@ const errorController = require("./controllers/error");
 
 const mongoConnect = require("./util/database").mongoConnect;
 
+const User = require("./models/user");
+
 const app = express();
 
 app.set("view engine", "ejs");
@@ -19,12 +21,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use((req, res, next) => {
-  //   // User.findByPk(1)
-  //   //   .then((user) => {
-  //   //     req.user = user;
-  //   //     next();
-  //   //   })
-  //   //   .catch((err) => console.log(err));
+  User.findById("5fbbaf5abb20e921f4a8f9e")
+    .then((user) => {
+      req.user = user;
+      next();
+    })
+    .catch((err) => console.log(err));
   next();
 });
 
