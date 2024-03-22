@@ -24,14 +24,13 @@ class Product {
       dbOp = db.collection("products").insertOne(this);
     }
 
-      return dbOp
-        .then((result) => {
-          console.log(this);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    
+    return dbOp
+      .then((result) => {
+        console.log(this);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   static fetchAll() {
