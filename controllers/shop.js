@@ -1,7 +1,8 @@
 const Product = require("../models/product");
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll().then((products) => {
+  Product.find().then((products) => {
+    console.log(products);
     res.render("shop/product-list", {
       prods: products,
       pageTitle: "All Products",
@@ -24,7 +25,7 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll()
+  Product.find()
     .then((products) => {
       res.render("shop/index", {
         prods: products,
@@ -58,29 +59,42 @@ exports.postCart = (req, res, next) => {
       console.log(result);
       res.redirect("/cart");
     });
-
 };
 
 exports.postCartDeleteProduct = (req, res, next) => {
-  const prodId= req.body.productId;
+  const prodId = req.body.productId;
   console.log("hello from postCartDeleteProduct", prodId);
   req.user
-  .deleteItemFromCart(prodId) 
-    
+    .deleteItemFromCart(prodId)
+
     .then(() => {
       console.log("Cart item deleted successfully.");
       res.redirect("/cart");
     })
-    .catch((err) => {
-     
-    });
+    .catch((err) => {});
 };
 
 exports.getOrders = (req, res, next) => {
-  res.render("shop/orders", {
-    path: "/orders",
-    pageTitle: "Your Orders",
-  });
+  req.user
+    .getOrders()
+    .then((orders) => {
+      res.render("shop/orders", {
+        path: "/orders",
+        pageTitle: "Your Orders",
+        orders: orders,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
+exports.postOrder = (req, res, next) => {
+  let fetchedCart;
+  req.user
+    .addOrder()
+    .then((result) => {
+      res.redirect("/orders");
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.getCheckout = (req, res, next) => {

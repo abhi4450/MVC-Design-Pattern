@@ -242,6 +242,43 @@ form {
 .btn:hover {
   background-color: #bd2130;
 }
+.center {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.orders {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  border-radius: 0.5rem;
+}
+
+/* Style for the order number */
+.orders__item h1 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+/* Style for the list of products in an order */
+.orders__products {
+  list-style: none;
+  padding: 0;
+}
+
+/* Style for each product in an order */
+.orders__products-item {
+  font-size: 16px;
+  margin-bottom: 5px;
+  color: rgb(15, 5, 157);
+  border: 1px solid rgb(15, 5, 157);
+  padding: 10px;
+}
+
 @media (min-width: 768px) {
   .main-header__nav {
     display: flex;
